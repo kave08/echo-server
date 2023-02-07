@@ -2,6 +2,7 @@ package main
 
 import (
 	"echo-server/config"
+	"echo-server/routing"
 	"fmt"
 	"log"
 
@@ -20,8 +21,11 @@ func main() {
 	//init server
 	server := echo.New()
 
+	// routing
+	err = routing.SetRouting(server)
+
 	//start server
-	err = server.Start(":"+config.Cfg.Port)
+	err = server.Start(":" + config.Cfg.Port)
 	if err != nil {
 		log.Fatal(err)
 	}
