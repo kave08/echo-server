@@ -1,7 +1,7 @@
 package routing
 
 import (
-	"net/http"
+	"echo-server/controler"
 
 	"github.com/labstack/echo/v4"
 )
@@ -9,18 +9,15 @@ import (
 func SetRouting(e *echo.Echo) error {
 
 	u := e.Group("/users")
-	u.GET("/get/15", func(c echo.Context) error {
-		return c.String(http.StatusOK, "/users/get/15")
-	})
+	u.GET("/get",controler.GetUser)
 
-	u.GET("/get/:id", func(c echo.Context) error {
-		return c.String(http.StatusOK, "/users/get")
-	})
+	u.GET("/get/:id", controler.GetUserId)
 
-	u.GET("/get/:id/avatar", func(c echo.Context) error {
-		return c.String(http.StatusOK, "/users/get/avatar")
-	})
+	u.GET("/getlist", controler.GetUserList)
 
+	u.GET("/get/:id/avatar", controler.GetUserAvatar)
+
+	u.POST("/create", controler.CreateUser)
 
 	return nil
 }
