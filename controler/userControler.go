@@ -2,6 +2,7 @@ package controler
 
 import (
 	"echo-server/model"
+	"echo-server/service"
 	"fmt"
 	"net/http"
 
@@ -38,25 +39,12 @@ func CreateUser(c echo.Context) error {
 }
 
 func GetUserList(c echo.Context) error {
-	userList := []model.User{
-		{
-			Name:   "kave",
-			Family: "haj",
-			Age:    31,
-			Phone:  "09364646448",
-		},
-		{
-			Name:   "james",
-			Family: "hetfaild",
-			Age:    45,
-			Phone:  "0912345678",
-		},
-		{
-			Name:   "anna",
-			Family: "bani",
-			Age:    32,
-			Phone:  "0911345678",
-		},
+
+	userService := service.NewUserService()
+	
+	userList, err := userService.GetUserList()
+	if err != nil {
+		return err
 	}
 
 	return c.JSON(http.StatusOK, userList)
