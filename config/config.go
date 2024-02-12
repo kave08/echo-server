@@ -21,6 +21,8 @@ func LoadConfig() error {
 	if err != nil {
 		return err
 	}
+	
+	defer file.Close()
 
 	decoder := yaml.NewDecoder(file)
 	err = decoder.Decode(&Cfg)
