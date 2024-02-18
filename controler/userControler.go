@@ -16,16 +16,16 @@ func GetUser(c echo.Context) error {
 		return err
 	}
 	fmt.Println(userInput.Name, userInput.Family, userInput.Age, userInput.Phone)
-	return c.String(http.StatusOK, "/users")
+	return c.JSON(http.StatusOK, "/users")
 }
 
 func GetUserId(c echo.Context) error {
-	return c.String(http.StatusOK, "/user/get")
+	return c.JSON(http.StatusOK, "/user/get")
 }
 
 func GetUserAvatar(c echo.Context) error {
 	idString := c.Param("id")
-	return c.String(http.StatusOK, "/user/get/avatar/[with param ("+idString+")]/avatar")
+	return c.JSON(http.StatusOK, "/user/get/avatar/[with param ("+idString+")]/avatar")
 }
 
 func CreateUser(c echo.Context) error {
@@ -35,13 +35,13 @@ func CreateUser(c echo.Context) error {
 		return err
 	}
 	fmt.Println(userInput.Name, userInput.Family, userInput.Age, userInput.Phone)
-	return c.String(http.StatusOK, "/users")
+	return c.JSON(http.StatusOK, "/users")
 }
 
 func GetUserList(c echo.Context) error {
 
 	userService := service.NewUserService()
-	
+
 	userList, err := userService.GetUserList()
 	if err != nil {
 		return err
