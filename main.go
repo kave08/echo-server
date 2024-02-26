@@ -30,6 +30,9 @@ func main() {
 
 	// routing
 	err = routing.SetRouting(server)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	//start server
 	err = server.Start(":" + config.Cfg.Port)
