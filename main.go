@@ -2,6 +2,7 @@ package main
 
 import (
 	"echo-server/config"
+	"echo-server/database"
 	"echo-server/routing"
 	"fmt"
 	"log"
@@ -10,8 +11,14 @@ import (
 )
 
 func main() {
-	//confi
-	err := config.LoadConfig()
+	//database
+	_, err := database.InitMongo()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//config
+	err = config.LoadConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
