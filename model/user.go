@@ -1,11 +1,9 @@
 package model
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
-
 type User struct {
-	Id     primitive.ObjectID
-	Name   string `query:"name" json:"first_name"`
-	Family string `query:"family" json:"last_name"`
-	Age    int    `query:"age" json:"age"`
-	Phone  string `query:"phone" json:"phone"`
+	Id     string `bson:"_id"`
+	Name   string `bson:"_id" query:"name" json:"first_name"`
+	Family string `bson:"_id" query:"family" json:"last_name"`
+	Age    int    `bson:"_id" query:"age" json:"age"`
+	Phone  string `bson:"_id" query:"phone" json:"phone"`
 }
