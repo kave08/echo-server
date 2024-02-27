@@ -12,6 +12,7 @@ import (
 
 type Repository interface {
 	GetUserList() ([]model.User, error)
+	GetUserId(id string) (*model.User, error)
 }
 
 type repository struct {
@@ -35,7 +36,7 @@ func (r repository) GetUserList() ([]model.User, error) {
 
 	cur, err := c.Find(context.TODO(), bson.D{})
 	if err != nil {
-		
+
 		return nil, err
 	}
 	err = cur.All(context.TODO(), &users)
