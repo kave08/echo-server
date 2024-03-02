@@ -10,11 +10,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type Repository interface {
-	GetUserList() ([]model.User, error)
-	GetUserId(id string) (*model.User, error)
-}
-
 type repository struct {
 	db database.Db
 }
@@ -70,4 +65,16 @@ func (r repository) GetUserId(id string) (*model.User, error) {
 	}
 
 	return &user, nil
+}
+
+func (r repository) InsertUser(user model.User) (string, error) {
+	userCollection := r.db.GetUserCollection()
+	res, err := userCollection.InsertOne(context.TODO(), user)
+	if err != nil {
+		return "", err
+	}
+
+	objId := res.InsertedID.(primitive.ObjectID).Hex()
+
+	return objId, nil
 }
