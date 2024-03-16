@@ -78,3 +78,30 @@ func (r repository) InsertUser(user model.User) (string, error) {
 
 	return objId, nil
 }
+
+func (r repository) UpdateUserById(user model.User) error {
+	objectId, err := primitive.ObjectIDFromHex(user.Id)
+	if err != nil {
+		return err
+	}
+
+	user.Id = ""
+
+	userCollection := r.db.GetUserCollection()
+
+	_, err = userCollection.UpdateOne(context.TODO(),
+		bson.D{
+			{
+				Key:   "_id",
+				Value: objectId,
+			}},
+		bson.D{{
+			Key:   "$set",
+			Value: user,
+		}})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
