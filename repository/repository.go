@@ -105,3 +105,24 @@ func (r repository) UpdateUserById(user model.User) error {
 
 	return nil
 }
+
+func (r repository) DeleteUserById(id string) error {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	userCollection := r.db.GetUserCollection()
+
+	_, err = userCollection.DeleteOne(context.TODO(),
+		bson.D{
+			{
+				Key:   "_id",
+				Value: objectId,
+			}})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
