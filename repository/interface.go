@@ -7,4 +7,5 @@ type Repository interface {
 	GetUserId(id string) (*model.User, error)
 	InsertUser(user model.User) (string, error)
 	UpdateUserById(user model.User) error
+	DeleteUserById(id string) error
 }
