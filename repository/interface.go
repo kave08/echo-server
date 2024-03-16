@@ -6,4 +6,5 @@ type Repository interface {
 	GetUserList() ([]model.User, error)
 	GetUserId(id string) (*model.User, error)
 	InsertUser(user model.User) (string, error)
+	UpdateUserById(user model.User) error
 }
