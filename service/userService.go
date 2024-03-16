@@ -17,7 +17,6 @@ func (u userService) GetUserList() ([]model.User, error) {
 	userRepo := repository.NewUserService()
 	userList, err := userRepo.GetUserList()
 	if err != nil {
-
 		return nil, err
 	}
 
@@ -27,9 +26,18 @@ func (u userService) GetUserList() ([]model.User, error) {
 		Age:    0,
 		Phone:  "",
 	})
-
 	if err != nil {
+		return nil, err
+	}
 
+	err = userRepo.UpdateUserById(model.User{
+		Id:     "",
+		Name:   "",
+		Family: "",
+		Age:    0,
+		Phone:  "",
+	})
+	if err != nil {
 		return nil, err
 	}
 
