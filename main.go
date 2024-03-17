@@ -2,9 +2,11 @@ package main
 
 import (
 	"echo-server/config"
+	"echo-server/handler"
 	"echo-server/database"
+	"echo-server/repository"
 	"echo-server/routing"
-	"fmt"
+	"echo-server/service"
 	"log"
 
 	"github.com/labstack/echo/v4"
@@ -23,13 +25,20 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(config.Cfg.Port)
-
 	//init server
 	server := echo.New()
 
+	//init repo
+	repo := repository.NewUserService()
+
+	//init service
+	srv := service.NewUserService(repo)
+
+	//init handler
+	hndlr := handler.NewUserHandler(srv)
+
 	// routing
-	err = routing.SetRouting(server)
+	err = routing.SetRouting(server, hndlr)
 	if err != nil {
 		log.Fatal(err)
 	}
