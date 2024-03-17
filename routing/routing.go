@@ -1,23 +1,16 @@
 package routing
 
 import (
-	"echo-server/controler"
+	"echo-server/handler"
 
 	"github.com/labstack/echo/v4"
 )
 
-func SetRouting(e *echo.Echo) error {
+func SetRouting(e *echo.Echo, handler *handler.UserHandler) error {
 
 	u := e.Group("/users")
-	u.GET("/get",controler.GetUser)
-
-	u.GET("/get/:id", controler.GetUserId)
-
-	u.GET("/getlist", controler.GetUserList)
-
-	u.GET("/get/:id/avatar", controler.GetUserAvatar)
-
-	u.POST("/create", controler.CreateUser)
+	u.GET("/getlist", handler.GetUserList())
+	u.POST("/create", handler.CreateUser())
 
 	return nil
 }
