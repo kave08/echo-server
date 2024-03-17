@@ -12,6 +12,10 @@ type UserRequest struct {
 	services service.UserService
 }
 
+type UserResponse struct {
+	NewUserId string
+}
+
 func NewUserRequest(service service.UserService) *UserRequest {
 	return &UserRequest{
 		services: service,
@@ -22,15 +26,19 @@ func (u UserRequest) CreateUser(c echo.Context) error {
 	userInput := new(model.User)
 	err := c.Bind(userInput)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusBadRequest, " ")
 	}
 
 	id, err := u.services.CreateUser(*userInput)
 	if err != nil {
-		return err
+		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	return c.JSON(http.StatusOK, id)
+	res := UserResponse{
+		NewUserId: id,
+	}
+
+	return c.JSON(http.StatusOK, res.NewUserId)
 }
 
 func (u UserRequest) GetUserList(c echo.Context) error {
