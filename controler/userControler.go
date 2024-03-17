@@ -3,46 +3,39 @@ package controler
 import (
 	"echo-server/model"
 	"echo-server/service"
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
 
-func GetUser(c echo.Context) error {
+type UserRequest struct {
+	services service.UserService
+}
+
+func NewUserRequest(service service.UserService) *UserRequest {
+	return &UserRequest{
+		services: service,
+	}
+}
+
+func (u UserRequest) CreateUser(c echo.Context) error {
 	userInput := new(model.User)
 	err := c.Bind(userInput)
 	if err != nil {
 		return err
 	}
-	fmt.Println(userInput.Name, userInput.Family, userInput.Age, userInput.Phone)
-	return c.JSON(http.StatusOK, "/users")
-}
 
-func GetUserId(c echo.Context) error {
-	return c.JSON(http.StatusOK, "/user/get")
-}
-
-func GetUserAvatar(c echo.Context) error {
-	idString := c.Param("id")
-	return c.JSON(http.StatusOK, "/user/get/avatar/[with param ("+idString+")]/avatar")
-}
-
-func CreateUser(c echo.Context) error {
-	userInput := new(model.User)
-	err := c.Bind(userInput)
+	id, err := u.services.CreateUser(*userInput)
 	if err != nil {
 		return err
 	}
-	fmt.Println(userInput.Name, userInput.Family, userInput.Age, userInput.Phone)
-	return c.JSON(http.StatusOK, "/users")
+
+	return c.JSON(http.StatusOK, id)
 }
 
-func GetUserList(c echo.Context) error {
+func (u UserRequest) GetUserList(c echo.Context) error {
 
-	userService := service.NewUserService()
-
-	userList, err := userService.GetUserList()
+	userList, err := u.services.GetUserList()
 	if err != nil {
 		return err
 	}
