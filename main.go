@@ -2,13 +2,15 @@ package main
 
 import (
 	"echo-server/config"
-	"echo-server/handler"
 	"echo-server/database"
+	"echo-server/handler"
 	"echo-server/repository"
 	"echo-server/routing"
 	"echo-server/service"
+	"echo-server/utility"
 	"log"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 )
 
@@ -27,6 +29,11 @@ func main() {
 
 	//init server
 	server := echo.New()
+
+	//validation
+	server.Validator = utility.CustomValidator{
+		Validator: validator.New(),
+	}
 
 	//init repo
 	repo := repository.NewUserService()
