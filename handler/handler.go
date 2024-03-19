@@ -31,6 +31,10 @@ func (u *UserHandler) CreateUser() func(ctx echo.Context) error {
 			return ctx.JSON(http.StatusBadRequest, " ")
 		}
 
+		if err := ctx.Validate(userInput); err != nil {
+			return ctx.JSON(http.StatusBadRequest, " ")
+		}
+
 		id, err := u.services.CreateUser(*userInput)
 		if err != nil {
 			return ctx.JSON(http.StatusBadRequest, err)
