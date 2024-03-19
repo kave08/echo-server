@@ -12,6 +12,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
@@ -27,14 +28,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	//init server
-	server := echo.New()
-
-	//validation
-	server.Validator = utility.CustomValidator{
-		Validator: validator.New(),
-	}
-
 	//init repo
 	repo := repository.NewUserService()
 
@@ -43,6 +36,17 @@ func main() {
 
 	//init handler
 	hndlr := handler.NewUserHandler(srv)
+
+	//init server
+	server := echo.New()
+
+	//middleware
+	server.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(20)))
+
+	//validation
+	server.Validator = utility.CustomValidator{
+		Validator: validator.New(),
+	}
 
 	// routing
 	err = routing.SetRouting(server, hndlr)
