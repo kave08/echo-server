@@ -75,10 +75,13 @@ func (u *UserHandler) Login() func(ctx echo.Context) error {
 			return ctx.JSON(http.StatusBadRequest, "user not valid")
 		}
 
-		//TODO: get user
-
+		user, err := u.services.GetUserByUserNameAndPassword(*loginInput)
+		if err != nil {
+			return ctx.JSON(http.StatusBadRequest, "user not found")
+		}
 		claims := &security.JtwClaims{
-			UserName: loginInput.UserName,
+			UserName: user.UserName,
+			UserId:   user.Id,
 			StandardClaims: jwt.StandardClaims{
 				ExpiresAt: time.Now().Add(24 * time.Hour).Unix(),
 			},
