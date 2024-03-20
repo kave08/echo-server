@@ -1,10 +1,13 @@
 package handler
 
 import (
+	"echo-server/common/security"
 	"echo-server/model"
 	"echo-server/service"
 	"net/http"
+	"time"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 )
 
@@ -57,4 +60,37 @@ func (u *UserHandler) GetUserList() func(ctx echo.Context) error {
 
 		return ctx.JSON(http.StatusOK, userList)
 	}
+}
+
+func (u *UserHandler) Login() func(ctx echo.Context) error {
+	return func(ctx echo.Context) error {
+
+		loginInput := new(model.Login)
+		err := ctx.Bind(loginInput)
+		if err != nil {
+			return ctx.JSON(http.StatusBadRequest, " ")
+		}
+
+		if err := ctx.Validate(loginInput); err != nil {
+			return ctx.JSON(http.StatusBadRequest, "user not valid")
+		}
+
+		//TODO: get user
+
+		claims := &security.JtwClaims{
+			UserName: loginInput.UserName,
+			StandardClaims: jwt.StandardClaims{
+				ExpiresAt: time.Now().Add(24 * time.Hour).Unix(),
+			},
+		}
+
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+		st, err := token.SignedString([]byte("secret "))
+		if err != nil {
+			return ctx.JSON(http.StatusInternalServerError, err)
+		}
+
+		return ctx.JSON(http.StatusOK, echo.Map{"token": st})
+	}
+
 }
