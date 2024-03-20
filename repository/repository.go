@@ -67,6 +67,25 @@ func (r repository) GetUserId(id string) (*model.User, error) {
 	return &user, nil
 }
 
+func (r repository) GetUserByUserNameAndPassword(login model.Login) (*model.User, error) {
+	var user model.User
+	c := r.db.GetUserCollection()
+
+	err := c.FindOne(context.TODO(), bson.D{
+		{
+			Key: "user_name", Value: login.UserName,
+		},
+		{
+			Key: "password", Value: login.Password,
+		},
+	}).Decode(&user)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
 func (r repository) InsertUser(user model.User) (string, error) {
 	userCollection := r.db.GetUserCollection()
 	res, err := userCollection.InsertOne(context.TODO(), user)
