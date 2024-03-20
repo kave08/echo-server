@@ -26,6 +26,16 @@ func (u Service) GetUserList() ([]model.User, error) {
 	return userList, nil
 }
 
+func (u Service) GetUserByUserNameAndPassword(login model.Login) (*model.User, error) {
+
+	user, err := u.repo.GetUserByUserNameAndPassword(login)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
 func (u Service) CreateUser(user model.User) (string, error) {
 
 	userInput := model.User{
