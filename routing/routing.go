@@ -8,6 +8,8 @@ import (
 
 func SetRouting(e *echo.Echo, handler *handler.UserHandler) error {
 
+	e.POST("/login", handler.Login())
+
 	u := e.Group("/users")
 	u.GET("/getlist", handler.GetUserList())
 	u.POST("/create", handler.CreateUser())
