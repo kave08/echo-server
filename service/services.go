@@ -46,6 +46,7 @@ func (u Service) CreateUser(user model.User) (string, error) {
 		Phone:      user.Phone,
 		UserName:   user.UserName,
 		Password:   user.Password,
+		CreateUser: user.CreateUser,
 		Created_at: time.Now(),
 	}
 
