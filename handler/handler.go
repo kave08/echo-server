@@ -38,6 +38,11 @@ func (u *UserHandler) CreateUser() func(ctx echo.Context) error {
 			return ctx.JSON(http.StatusBadRequest, " ")
 		}
 
+		token := ctx.Get("user").(*jwt.Token)
+
+		claim := token.Claims.(*security.JtwClaims)
+		userInput.CreateUser = claim.UserId
+
 		id, err := u.services.CreateUser(*userInput)
 		if err != nil {
 			return ctx.JSON(http.StatusBadRequest, err)
@@ -66,6 +71,7 @@ func (u *UserHandler) Login() func(ctx echo.Context) error {
 	return func(ctx echo.Context) error {
 
 		loginInput := new(model.Login)
+
 		err := ctx.Bind(loginInput)
 		if err != nil {
 			return ctx.JSON(http.StatusBadRequest, " ")
