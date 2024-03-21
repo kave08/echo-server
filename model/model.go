@@ -17,4 +17,5 @@ type User struct {
 	UserName   string    `bson:"user_name,omitempty" validate:"required" query:"user_name" json:"user_name"`
 	Password   string    `bson:"password,omitempty" validate:"required" query:"password" json:"password"`
 	Created_at time.Time `bson:"created_at,omitempty" query:"created_at" json:"created_at"`
+	CreateUser string    `bson:"create_user,omitempty" query:"create_user" json:"create_user"`
 }
