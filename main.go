@@ -41,6 +41,13 @@ func main() {
 	server := echo.New()
 
 	//middleware
+	server.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			apiContext := &utility.ApiContext{Context: c}
+			return next(apiContext)
+		}
+	})
+
 	server.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(20)))
 
 	//validation
