@@ -4,6 +4,7 @@ import (
 	"echo-server/common/security"
 	"echo-server/model"
 	"echo-server/service"
+	"echo-server/utility"
 	"net/http"
 	"time"
 
@@ -28,6 +29,8 @@ func NewUserHandler(service service.UserService) *UserHandler {
 func (u *UserHandler) CreateUser() func(ctx echo.Context) error {
 	return func(ctx echo.Context) error {
 
+		apiContext := ctx.(*utility.ApiContext)
+
 		userInput := new(model.User)
 		err := ctx.Bind(userInput)
 		if err != nil {
@@ -37,11 +40,11 @@ func (u *UserHandler) CreateUser() func(ctx echo.Context) error {
 		if err := ctx.Validate(userInput); err != nil {
 			return ctx.JSON(http.StatusBadRequest, " ")
 		}
-
-		token := ctx.Get("user").(*jwt.Token)
-
-		claim := token.Claims.(*security.JtwClaims)
-		userInput.CreateUser = claim.UserId
+		creator, err := apiContext.GetUserId()
+		if err != nil {
+			return ctx.JSON(http.StatusBadRequest, " ")
+		}
+		userInput.CreateUser = creator
 
 		id, err := u.services.CreateUser(*userInput)
 		if err != nil {
