@@ -99,12 +99,12 @@ func (r repository) InsertUser(user model.User) (string, error) {
 }
 
 func (r repository) UpdateUserById(user model.User) error {
-	objectId, err := primitive.ObjectIDFromHex(user.Id)
+	objectId, err := primitive.ObjectIDFromHex(user.ID)
 	if err != nil {
 		return err
 	}
 
-	user.Id = ""
+	user.ID = ""
 
 	userCollection := r.db.GetUserCollection()
 
