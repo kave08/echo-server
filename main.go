@@ -1,6 +1,7 @@
 package main
 
 import (
+	"echo-server/common/security"
 	"echo-server/config"
 	"echo-server/database"
 	"echo-server/handler"
@@ -40,6 +41,12 @@ func main() {
 	//init server
 	server := echo.New()
 
+	// routing
+	err = routing.SetRouting(server, hndlr)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	//middleware
 	server.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -48,17 +55,20 @@ func main() {
 		}
 	})
 
+	server.Use(middleware.JWTWithConfig(middleware.JWTConfig{
+		SigningKey:             []byte("secret"),
+		Claims:                 &security.JtwClaims{},
+		ContinueOnIgnoredError: true,
+		ErrorHandlerWithContext: func(err error, c echo.Context) error {
+			return nil
+		},
+	}))
+
 	server.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(20)))
 
 	//validation
 	server.Validator = utility.CustomValidator{
 		Validator: validator.New(),
-	}
-
-	// routing
-	err = routing.SetRouting(server, hndlr)
-	if err != nil {
-		log.Fatal(err)
 	}
 
 	//start server
