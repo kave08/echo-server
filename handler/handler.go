@@ -12,24 +12,30 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// UserHandler is responsible for handling user-related HTTP requests.
 type UserHandler struct {
 	services service.UserService
 }
 
+// UserResponse represents the response structure for creating a new user
 type UserResponse struct {
-	NewUserId string
+	NewUserID string
 }
 
+// NewUserHandler creates a new instance of UserHandler with the provided UserService.
 func NewUserHandler(service service.UserService) *UserHandler {
 	return &UserHandler{
 		services: service,
 	}
 }
 
+// CreateUser creates a new user in the system.
+//
+// It expects a valid user input in the request body and returns the ID of the newly created user.
 func (u *UserHandler) CreateUser() func(ctx echo.Context) error {
 	return func(ctx echo.Context) error {
 
-		apiContext := ctx.(*utility.ApiContext)
+		apiContext := ctx.(*utility.APIContext)
 
 		userInput := new(model.User)
 		err := ctx.Bind(userInput)
@@ -40,7 +46,7 @@ func (u *UserHandler) CreateUser() func(ctx echo.Context) error {
 		if err := ctx.Validate(userInput); err != nil {
 			return ctx.JSON(http.StatusBadRequest, " ")
 		}
-		creator, err := apiContext.GetUserId()
+		creator, err := apiContext.GetUserID()
 		if err != nil {
 			return ctx.JSON(http.StatusBadRequest, " ")
 		}
@@ -52,13 +58,16 @@ func (u *UserHandler) CreateUser() func(ctx echo.Context) error {
 		}
 
 		res := UserResponse{
-			NewUserId: id,
+			NewUserID: id,
 		}
 
-		return ctx.JSON(http.StatusOK, res.NewUserId)
+		return ctx.JSON(http.StatusOK, res.NewUserID)
 	}
 }
 
+// GetUserList retrieves a list of all users from the database.
+//
+// It returns a function that handles the HTTP request and response.
 func (u *UserHandler) GetUserList() func(ctx echo.Context) error {
 	return func(ctx echo.Context) error {
 		userList, err := u.services.GetUserList()
@@ -70,6 +79,9 @@ func (u *UserHandler) GetUserList() func(ctx echo.Context) error {
 	}
 }
 
+// Login authenticates a user based on the provided username and password.
+//
+// It returns a JWT token if the authentication is successful.
 func (u *UserHandler) Login() func(ctx echo.Context) error {
 	return func(ctx echo.Context) error {
 

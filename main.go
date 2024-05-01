@@ -50,7 +50,7 @@ func main() {
 	//middleware
 	server.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			apiContext := &utility.ApiContext{Context: c}
+			apiContext := &utility.APIContext{Context: c}
 			return next(apiContext)
 		}
 	})
