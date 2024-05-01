@@ -102,7 +102,7 @@ func (u *UserHandler) Login() func(ctx echo.Context) error {
 		}
 		claims := &security.JtwClaims{
 			UserName: user.UserName,
-			UserId:   user.Id,
+			UserId:   user.ID,
 			StandardClaims: jwt.StandardClaims{
 				ExpiresAt: time.Now().Add(24 * time.Hour).Unix(),
 			},
