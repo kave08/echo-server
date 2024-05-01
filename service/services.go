@@ -47,7 +47,8 @@ func (u Service) CreateUser(user model.User) (string, error) {
 		UserName:   user.UserName,
 		Password:   user.Password,
 		CreateUser: user.CreateUser,
-		Created_at: time.Now(),
+		Roles:      user.Roles,
+		CreatedAt:  time.Now(),
 	}
 
 	userId, err := u.repo.InsertUser(userInput)
