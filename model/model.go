@@ -8,7 +8,7 @@ type Login struct {
 }
 
 type User struct {
-	Id         string    `bson:"_id,omitempty"`
+	ID         string    `bson:"_id,omitempty"`
 	FirstName  string    `bson:"first_name,omitempty" validate:"required" query:"first_name" json:"first_name"`
 	LastName   string    `bson:"last_name,omitempty" validate:"required" query:"last_name" json:"last_name"`
 	Age        int       `bson:"age,omitempty" query:"age" json:"age"`
@@ -16,6 +16,7 @@ type User struct {
 	Phone      string    `bson:"phone,omitempty" validate:"required" query:"phone" json:"phone"`
 	UserName   string    `bson:"user_name,omitempty" validate:"required" query:"user_name" json:"user_name"`
 	Password   string    `bson:"password,omitempty" validate:"required" query:"password" json:"password"`
-	Created_at time.Time `bson:"created_at,omitempty" query:"created_at" json:"created_at"`
 	CreateUser string    `bson:"create_user,omitempty" query:"create_user" json:"create_user"`
+	Roles      []string  `bson:"roles,omitempty" query:"roles" json:"roles"`
+	CreatedAt  time.Time `bson:"created_at,omitempty" query:"created_at" json:"created_at"`
 }
