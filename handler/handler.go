@@ -37,8 +37,17 @@ func (u *UserHandler) CreateUser() func(ctx echo.Context) error {
 
 		apiContext := ctx.(*utility.APIContext)
 
+		operatorUserID, err := apiContext.GetUserID()
+		if err != nil {
+			return ctx.JSON(http.StatusBadRequest, " ")
+		}
+
+		isValid := u.services.IsUserValidForAccess(operatorUserID, "create-user")
+		if !isValid {
+			return ctx.JSON(http.StatusForbidden, " ")
+		}
 		userInput := new(model.User)
-		err := ctx.Bind(userInput)
+		err = ctx.Bind(userInput)
 		if err != nil {
 			return ctx.JSON(http.StatusBadRequest, " ")
 		}
@@ -46,11 +55,8 @@ func (u *UserHandler) CreateUser() func(ctx echo.Context) error {
 		if err := ctx.Validate(userInput); err != nil {
 			return ctx.JSON(http.StatusBadRequest, " ")
 		}
-		creator, err := apiContext.GetUserID()
-		if err != nil {
-			return ctx.JSON(http.StatusBadRequest, " ")
-		}
-		userInput.CreateUser = creator
+
+		userInput.CreateUser = operatorUserID
 
 		id, err := u.services.CreateUser(*userInput)
 		if err != nil {
