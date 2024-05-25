@@ -3,7 +3,10 @@ package service
 import (
 	"echo-server/model"
 	"echo-server/repository"
+
 	"time"
+
+	"golang.org/x/exp/slices"
 )
 
 type Service struct {
@@ -34,6 +37,24 @@ func (u Service) GetUserByUserNameAndPassword(login model.Login) (*model.User, e
 	}
 
 	return user, nil
+}
+
+func (u Service) IsUserValidForAccess(userID, roleName string) bool {
+
+	user, err := u.repo.GetUserId(userID)
+	if err != nil {
+		return false
+	}
+
+	if user.Roles == nil {
+		return false
+	}
+
+	roleIndex := slices.IndexFunc(user.Roles, func(role string) bool {
+		return role == roleName
+	})
+
+	return roleIndex >= 0
 }
 
 func (u Service) CreateUser(user model.User) (string, error) {
